@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veriqon – Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/orders.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <span>Veriqon</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
+      <a href="orders.html" class="nav-item active"><span class="nav-icon">☰</span> Orders</a>
+      <a href="risk-alerts.html" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="blocked-orders.html" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="customers.html" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
+      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+      <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="nav-item"><span class="nav-icon">?</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="store-selector"><span>ABC Store</span><span class="chevron">▾</span></div>
+      <div class="topbar-right">
+        <span class="notif-icon">🔔</span>
+        <span class="notif-icon">👤</span>
+      </div>
+    </header>
+
+    <div class="content">
+      <h1 class="page-title">Orders</h1>
+
+      <!-- FILTERS -->
+      <div class="filters-row">
+        <div class="filter-tabs">
+          <button class="tab active" onclick="filterOrders('all')">All Orders</button>
+          <button class="tab" onclick="filterOrders('high')">Flagged</button>
+          <button class="tab" onclick="filterOrders('medium')">Review</button>
+          <button class="tab" onclick="filterOrders('low')">Safe</button>
+          <button class="tab" onclick="filterOrders('blocked')">Blocked</button>
+        </div>
+        <div class="filter-right">
+          <input class="search-input" type="text" id="search-input" placeholder="Search orders..." oninput="searchOrders()" />
+          <select class="r-select">
+            <option>Last 30 days</option>
+            <option>Last 7 days</option>
+            <option>Last 90 days</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Risk Score</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <span class="page-info" id="page-info">Loading...</span>
+          <div class="page-btns">
+            <button class="page-btn" id="prev-btn" onclick="changePage(-1)" disabled>← Prev</button>
+            <span id="page-numbers"></span>
+            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SHOP = 'nbtsd.myshopify.com';
+    const API = 'https://veriqon-backend.onrender.com';
+    const PER_PAGE = 8;
+
+    let allOrders = [];
+    let filteredOrders = [];
+    let currentPage = 1;
+    let currentFilter = 'all';
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${API}/api/orders?shop=${SHOP}`);
+        allOrders = await res.json();
+        filteredOrders = allOrders;
+        renderTable();
+      } catch (err) {
+        document.getElementById('orders-tbody').innerHTML =
+          '<tr><td colspan="7" style="text-align:center;">Error loading orders</td></tr>';
+      }
+    }
+
+    function filterOrders(filter) {
+      currentFilter = filter;
+      currentPage = 1;
+
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+
+      if (filter === 'all') {
+        filteredOrders = allOrders;
+      } else if (filter === 'blocked') {
+        filteredOrders = allOrders.filter(o => o.is_blocked);
+      } else {
+        filteredOrders = allOrders.filter(o => o.risk_level === filter);
+      }
+      renderTable();
+    }
+
+    function searchOrders() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      filteredOrders = allOrders.filter(o =>
+        (o.order_number || '').toLowerCase().includes(query) ||
+        (o.customer_email || '').toLowerCase().includes(query) ||
+        (o.shopify_order_id || '').toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      renderTable();
+    }
+
+    function changePage(dir) {
+      const totalPages = Math.ceil(filteredOrders.length / PER_PAGE);
+      currentPage += dir;
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderTable();
+    }
+
+    function getStatusLabel(order) {
+      if (order.is_blocked) return '<span class="status blocked">Blocked</span>';
+      if (order.risk_level === 'high') return '<span class="status flagged">Flagged</span>';
+      if (order.risk_level === 'medium') return '<span class="status review">Review</span>';
+      return '<span class="status safe">Safe</span>';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleDateString('en-IN', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('orders-tbody');
+      const totalPages = Math.ceil(filteredOrders.length / PER_PAGE);
+      const start = (currentPage - 1) * PER_PAGE;
+      const pageOrders = filteredOrders.slice(start, start + PER_PAGE);
+
+      if (!pageOrders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No orders found</td></tr>';
+        document.getElementById('page-info').textContent = '0 orders';
+        return;
+      }
+
+      tbody.innerHTML = pageOrders.map(order => `
+        <tr>
+          <td>#${order.order_number || order.shopify_order_id}</td>
+          <td>${order.customer_email || '—'}</td>
+          <td>${formatDate(order.created_at)}</td>
+          <td>₹${Number(order.total_price).toLocaleString('en-IN')}</td>
+          <td><span class="badge ${order.risk_level}">${order.risk_score} (${order.risk_level})</span></td>
+          <td>${getStatusLabel(order)}</td>
+          <td><button class="btn-view" onclick="location.href='order-detail.html?id=${order.id}'">View</button></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('page-info').textContent =
+        `Showing ${start + 1}–${Math.min(start + PER_PAGE, filteredOrders.length)} of ${filteredOrders.length} orders`;
+
+      document.getElementById('prev-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage === totalPages;
+    }
+
+    loadOrders();
+  </script>
+
+</body>
+</html>

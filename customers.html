@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veriqon – Customers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/orders.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo"><div class="logo-icon">V</div><span>Veriqon</span></div>
+    <nav>
+      <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
+      <a href="orders.html" class="nav-item"><span class="nav-icon">☰</span> Orders</a>
+      <a href="risk-alerts.html" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="blocked-orders.html" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="customers.html" class="nav-item active"><span class="nav-icon">◯</span> Customers</a>
+      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+      <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
+    </nav>
+    <div class="sidebar-bottom"><a href="#" class="nav-item"><span class="nav-icon">?</span> Help & Support</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="store-selector"><span>ABC Store</span><span class="chevron">▾</span></div>
+      <div class="topbar-right"><span class="notif-icon">🔔</span><span class="notif-icon">👤</span></div>
+    </header>
+
+    <div class="content">
+      <h1 class="page-title">Customers</h1>
+
+      <div class="filters-row">
+        <div class="filter-tabs">
+          <button class="tab active" onclick="filterCustomers('all', this)">All</button>
+          <button class="tab" onclick="filterCustomers('high', this)">High Risk</button>
+          <button class="tab" onclick="filterCustomers('medium', this)">Medium Risk</button>
+          <button class="tab" onclick="filterCustomers('blocked', this)">Blocked</button>
+        </div>
+        <div class="filter-right">
+          <input class="search-input" type="text" id="search-input" placeholder="Search customers..." oninput="searchCustomers()"/>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Total Orders</th>
+              <th>Total Spent</th>
+              <th>Risk Score</th>
+              <th>Risk Level</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="customers-tbody">
+            <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <span class="page-info" id="page-info">Loading...</span>
+          <div class="page-btns">
+            <button class="page-btn" id="prev-btn" onclick="changePage(-1)" disabled>← Prev</button>
+            <span id="page-numbers"></span>
+            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SHOP = 'nbtsd.myshopify.com';
+    const API = 'https://veriqon-backend.onrender.com';
+    const PER_PAGE = 8;
+
+    let allCustomers = [];
+    let filteredCustomers = [];
+    let currentPage = 1;
+
+    async function loadCustomers() {
+      try {
+        const res = await fetch(`${API}/api/customers?shop=${SHOP}`);
+        allCustomers = await res.json();
+        filteredCustomers = allCustomers;
+        renderTable();
+      } catch (err) {
+        document.getElementById('customers-tbody').innerHTML =
+          '<tr><td colspan="7" style="text-align:center;">Error loading customers</td></tr>';
+      }
+    }
+
+    function filterCustomers(type, btn) {
+      currentPage = 1;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (type === 'all') filteredCustomers = allCustomers;
+      else if (type === 'blocked') filteredCustomers = allCustomers.filter(c => c.is_blocked);
+      else filteredCustomers = allCustomers.filter(c => c.risk_level === type);
+      renderTable();
+    }
+
+    function searchCustomers() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      filteredCustomers = allCustomers.filter(c =>
+        (c.email || '').toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      renderTable();
+    }
+
+    function changePage(dir) {
+      const totalPages = Math.ceil(filteredCustomers.length / PER_PAGE);
+      currentPage += dir;
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderTable();
+    }
+
+    function getStatusLabel(c) {
+      if (c.is_blocked) return '<span class="status blocked">Blocked</span>';
+      if (c.risk_level === 'high') return '<span class="status flagged">Flagged</span>';
+      if (c.risk_level === 'medium') return '<span class="status review">Review</span>';
+      return '<span class="status safe">Safe</span>';
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('customers-tbody');
+      const totalPages = Math.ceil(filteredCustomers.length / PER_PAGE);
+      const start = (currentPage - 1) * PER_PAGE;
+      const pageCustomers = filteredCustomers.slice(start, start + PER_PAGE);
+
+      if (!pageCustomers.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No customers found</td></tr>';
+        document.getElementById('page-info').textContent = '0 customers';
+        return;
+      }
+
+      tbody.innerHTML = pageCustomers.map(c => `
+        <tr>
+          <td>${c.email}</td>
+          <td>${c.total_orders}</td>
+          <td>₹${Number(c.total_spent).toLocaleString('en-IN')}</td>
+          <td>${c.risk_score}</td>
+          <td><span class="badge ${c.risk_level}">${c.risk_level}</span></td>
+          <td>${getStatusLabel(c)}</td>
+          <td><button class="btn-view">View</button></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('page-info').textContent =
+        `Showing ${start + 1}–${Math.min(start + PER_PAGE, filteredCustomers.length)} of ${filteredCustomers.length} customers`;
+
+      document.getElementById('prev-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage >= totalPages;
+    }
+
+    loadCustomers();
+  </script>
+
+</body>
+</html>

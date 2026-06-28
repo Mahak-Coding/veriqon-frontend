@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veriqon – Order Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/order-detail.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <span>Veriqon</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
+      <a href="orders.html" class="nav-item active"><span class="nav-icon">☰</span> Orders</a>
+      <a href="#" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="#" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="#" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
+      <a href="#" class="nav-item"><span class="nav-icon">⊗</span> Rules</a>
+      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+      <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="nav-item"><span class="nav-icon">?</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="store-selector"><span>ABC Store</span><span class="chevron">▾</span></div>
+      <button class="btn-outline" onclick="location.href='index.html'">← Back to Orders</button>
+    </header>
+
+    <div class="content">
+
+      <div class="detail-title-row">
+        <h1 class="page-title">Order #1001 &nbsp;<span class="status flagged">Flagged</span></h1>
+        <p class="order-meta">May 24, 2025 at 10:24 AM &nbsp;|&nbsp; Online Store</p>
+      </div>
+
+      <!-- ORDER INFO -->
+      <div class="section-box">
+        <h2 class="section-title">Order Information</h2>
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Order ID</span><span class="info-value">#1001</span></div>
+          <div class="info-item"><span class="info-label">Customer</span><span class="info-value">John Doe</span></div>
+          <div class="info-item"><span class="info-label">Date</span><span class="info-value">May 24, 2025 at 10:24 AM</span></div>
+          <div class="info-item"><span class="info-label">Email</span><span class="info-value">john.doe@email.com</span></div>
+          <div class="info-item"><span class="info-label">Amount</span><span class="info-value">$120.00</span></div>
+          <div class="info-item"><span class="info-label">Phone</span><span class="info-value">+1 (555) 123-4567</span></div>
+          <div class="info-item"><span class="info-label">Payment Method</span><span class="info-value">Visa •••• 4242</span></div>
+          <div class="info-item"><span class="info-label">Shipping Address</span><span class="info-value">123 Main St, Los Angeles, CA 90001</span></div>
+          <div class="info-item"><span class="info-label">Fulfillment</span><span class="info-value">Unfulfilled</span></div>
+          <div class="info-item"><span class="info-label">IP Address</span><span class="info-value">192.168.1.1</span></div>
+        </div>
+      </div>
+
+      <!-- RISK SCORE + WHY FLAGGED -->
+      <div class="section-box risk-row">
+        <div class="risk-left">
+          <p class="section-title">Risk Score</p>
+          <div class="score-number">85</div>
+          <div class="score-label-text high">High Risk</div>
+          <div class="score-bar"><div class="score-fill" style="width:85%"></div></div>
+          <div class="score-range"><span>0</span><span>50</span><span>100</span></div>
+        </div>
+        <div class="risk-right">
+          <p class="section-title">Why Flagged</p>
+          <ul class="flag-list">
+            <li class="flag-item warn"><span class="flag-icon">⚠</span> High risk email domain</li>
+            <li class="flag-item warn"><span class="flag-icon">⚠</span> Order amount is high for this customer</li>
+            <li class="flag-item warn"><span class="flag-icon">⚠</span> Shipping address does not match billing address</li>
+            <li class="flag-item info"><span class="flag-icon">ℹ</span> New customer</li>
+            <li class="flag-item warn"><span class="flag-icon">⚠</span> Multiple orders in short time from same IP</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CUSTOMER HISTORY -->
+      <div class="section-box">
+        <div class="table-header">
+          <span class="section-title">Customer History</span>
+          <button class="btn-outline">View Full History</button>
+        </div>
+        <div class="history-cards">
+          <div class="h-card"><div class="h-label">Total Orders</div><div class="h-value">2</div></div>
+          <div class="h-card"><div class="h-label">Total Spent</div><div class="h-value">$180.00</div></div>
+          <div class="h-card"><div class="h-label">Avg Order Value</div><div class="h-value">$90.00</div></div>
+          <div class="h-card"><div class="h-label">First Order</div><div class="h-value">May 24, 2025</div></div>
+        </div>
+        <table style="margin-top:16px">
+          <thead>
+            <tr>
+              <th>Order ID</th><th>Date</th><th>Amount</th><th>Risk Score</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#1001</td><td>May 24, 2025</td><td>$120.00</td>
+              <td><span class="badge high">85 (High)</span></td>
+              <td><span class="status flagged">Flagged</span></td>
+            </tr>
+            <tr>
+              <td>#0978</td><td>May 20, 2025</td><td>$60.00</td>
+              <td><span class="badge medium">40 (Medium)</span></td>
+              <td><span class="status safe">Approved</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="action-buttons">
+        <button class="btn-approve">✔ Approve</button>
+        <button class="btn-hold">⏸ Hold</button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

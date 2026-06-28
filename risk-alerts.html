@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veriqon – Risk Alerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/orders.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo"><div class="logo-icon">V</div><span>Veriqon</span></div>
+    <nav>
+      <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
+      <a href="orders.html" class="nav-item"><span class="nav-icon">☰</span> Orders</a>
+      <a href="risk-alerts.html" class="nav-item active"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="blocked-orders.html" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="customers.html" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
+      <a href="settings.html" class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+      <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
+    </nav>
+    <div class="sidebar-bottom"><a href="#" class="nav-item"><span class="nav-icon">?</span> Help & Support</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="store-selector"><span>ABC Store</span><span class="chevron">▾</span></div>
+      <div class="topbar-right"><span class="notif-icon">🔔</span><span class="notif-icon">👤</span></div>
+    </header>
+
+    <div class="content">
+      <h1 class="page-title">Risk Alerts</h1>
+
+      <div class="filters-row">
+        <div class="filter-tabs">
+          <button class="tab active" onclick="filterAlerts('all', this)">All</button>
+          <button class="tab" onclick="filterAlerts('high', this)">High Risk</button>
+          <button class="tab" onclick="filterAlerts('medium', this)">Medium Risk</button>
+        </div>
+        <div class="filter-right">
+          <input class="search-input" type="text" id="search-input" placeholder="Search alerts..." oninput="searchAlerts()"/>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Risk Score</th>
+              <th>Flags</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-tbody">
+            <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <span class="page-info" id="page-info">Loading...</span>
+          <div class="page-btns">
+            <button class="page-btn" id="prev-btn" onclick="changePage(-1)" disabled>← Prev</button>
+            <span id="page-numbers"></span>
+            <button class="page-btn" id="next-btn" onclick="changePage(1)">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SHOP = 'nbtsd.myshopify.com';
+    const API = 'https://veriqon-backend.onrender.com';
+    const PER_PAGE = 8;
+
+    let allAlerts = [];
+    let filteredAlerts = [];
+    let currentPage = 1;
+
+    async function loadAlerts() {
+      try {
+        const res = await fetch(`${API}/api/orders?shop=${SHOP}`);
+        const orders = await res.json();
+
+        // Sirf medium aur high risk orders dikhao
+        allAlerts = orders.filter(o => o.risk_level === 'high' || o.risk_level === 'medium');
+        filteredAlerts = allAlerts;
+        renderTable();
+      } catch (err) {
+        document.getElementById('alerts-tbody').innerHTML =
+          '<tr><td colspan="7" style="text-align:center;">Error loading alerts</td></tr>';
+      }
+    }
+
+    function filterAlerts(level, btn) {
+      currentPage = 1;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (level === 'all') {
+        filteredAlerts = allAlerts;
+      } else {
+        filteredAlerts = allAlerts.filter(o => o.risk_level === level);
+      }
+      renderTable();
+    }
+
+    function searchAlerts() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      filteredAlerts = allAlerts.filter(o =>
+        (o.order_number || '').toLowerCase().includes(query) ||
+        (o.customer_email || '').toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      renderTable();
+    }
+
+    function changePage(dir) {
+      const totalPages = Math.ceil(filteredAlerts.length / PER_PAGE);
+      currentPage += dir;
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderTable();
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleDateString('en-IN', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
+    function formatFlags(flags) {
+      if (!flags || !flags.length) return '—';
+      return flags.map(f => {
+        const labels = {
+          'billing_shipping_mismatch': 'Address mismatch',
+          'high_value_order': 'High value order',
+          'new_customer': 'New account',
+          'failed_payments': 'Failed payments',
+          'multiple_orders_same_ip': 'Multiple orders same IP'
+        };
+        return `<span style="background:#fff3cd;padding:2px 6px;border-radius:4px;font-size:12px;margin:2px;display:inline-block;">${labels[f] || f}</span>`;
+      }).join('');
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('alerts-tbody');
+      const totalPages = Math.ceil(filteredAlerts.length / PER_PAGE);
+      const start = (currentPage - 1) * PER_PAGE;
+      const pageAlerts = filteredAlerts.slice(start, start + PER_PAGE);
+
+      if (!pageAlerts.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No alerts found</td></tr>';
+        document.getElementById('page-info').textContent = '0 alerts';
+        return;
+      }
+
+      tbody.innerHTML = pageAlerts.map(order => `
+        <tr>
+          <td>#${order.order_number || order.shopify_order_id}</td>
+          <td>${order.customer_email || '—'}</td>
+          <td>${formatDate(order.created_at)}</td>
+          <td>₹${Number(order.total_price).toLocaleString('en-IN')}</td>
+          <td><span class="badge ${order.risk_level}">${order.risk_score} (${order.risk_level})</span></td>
+          <td>${formatFlags(order.flags)}</td>
+          <td><button class="btn-view" onclick="location.href='order-detail.html?id=${order.id}'">View</button></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('page-info').textContent =
+        `Showing ${start + 1}–${Math.min(start + PER_PAGE, filteredAlerts.length)} of ${filteredAlerts.length} alerts`;
+
+      document.getElementById('prev-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage >= totalPages;
+    }
+
+    loadAlerts();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+/* ── ORDER DETAIL ── */
+
+.detail-title-row { margin-bottom: 24px; }
+.detail-title-row .page-title { display: flex; align-items: center; gap: 12px; }
+.order-meta { font-size: 13px; color: #888; margin-top: 6px; }
+
+.section-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+/* INFO GRID */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #111;
+  font-weight: 500;
+}
+
+/* RISK ROW */
+.risk-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.risk-left { text-align: center; }
+
+.score-number {
+  font-size: 64px;
+  font-weight: 700;
+  color: #dc2626;
+  line-height: 1;
+  margin: 8px 0 4px;
+}
+
+.score-label-text {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.score-label-text.high { color: #dc2626; }
+
+.score-bar {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.score-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #16a34a, #d97706, #dc2626);
+  border-radius: 99px;
+}
+
+.score-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* WHY FLAGGED */
+.flag-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.flag-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.flag-item:last-child { border-bottom: none; }
+
+.flag-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.flag-item.warn .flag-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.flag-item.info .flag-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.flag-item.warn { color: #333; }
+.flag-item.info { color: #555; }
+
+/* HISTORY CARDS */
+.history-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.h-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.h-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.h-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.btn-approve {
+  padding: 14px;
+  border: 1.5px solid #111;
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-approve:hover { background: #333; }
+
+.btn-hold {
+  padding: 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-hold:hover { background: #f5f5f5; }

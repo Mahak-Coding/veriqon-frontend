@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veriqon – Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <span>Veriqon</span>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-item active">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a>
+      <a href="orders.html" class="nav-item">
+        <span class="nav-icon">☰</span> Orders
+      </a>
+      <a href="risk-alerts.html" class="nav-item">
+        <span class="nav-icon">△</span> Risk Alerts
+      </a>
+      <a href="blocked-orders.html" class="nav-item">
+        <span class="nav-icon">⊘</span> Blocked Orders
+      </a>
+      <a href="customers.html" class="nav-item">
+        <span class="nav-icon">◯</span> Customers
+      </a>
+      <a href="settings.html" class="nav-item">
+        <span class="nav-icon">⚙</span> Settings
+      </a>
+      <a href="billing.html" class="nav-item">
+        <span class="nav-icon">▣</span> Billing
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="nav-item">
+        <span class="nav-icon">?</span> Help & Support
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="store-selector">
+        <span>ABC Store</span>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-outline" onclick="location.href='settings.html'">View Settings</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <h1 class="page-title">Dashboard</h1>
+
+      <!-- STAT CARDS -->
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🛒</div>
+          <div class="card-label">Total Orders</div>
+          <div class="card-value" id="total-orders">—</div>
+          <button class="card-btn" onclick="location.href='orders.html'">View Orders</button>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔴</div>
+          <div class="card-label">High Risk Orders</div>
+          <div class="card-value" id="high-risk">—</div>
+          <button class="card-btn" onclick="location.href='orders.html'">View Orders</button>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚠</div>
+          <div class="card-label">Medium Risk</div>
+          <div class="card-value" id="medium-risk">—</div>
+          <button class="card-btn" onclick="location.href='risk-alerts.html'">View Alerts</button>
+        </div>
+        <div class="card">
+          <div class="card-icon">⊘</div>
+          <div class="card-label">Blocked Orders</div>
+          <div class="card-value" id="blocked">—</div>
+          <button class="card-btn" onclick="location.href='blocked-orders.html'">View Blocked</button>
+        </div>
+      </div>
+
+      <!-- ORDERS TABLE -->
+      <div class="table-box">
+        <div class="table-header">
+          <span class="table-title">Recent Orders</span>
+          <button class="btn-outline" onclick="location.href='orders.html'">View All Orders</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Risk Score</th>
+              <th>Risk Level</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body">
+            <tr>
+              <td colspan="6" style="text-align:center;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const res = await fetch('https://veriqon-backend.onrender.com/api/dashboard?shop=nbtsd.myshopify.com');
+        const data = await res.json();
+
+        document.getElementById('total-orders').textContent = data.total_orders;
+        document.getElementById('high-risk').textContent = data.high_risk;
+        document.getElementById('medium-risk').textContent = data.medium_risk;
+        document.getElementById('blocked').textContent = data.blocked;
+
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+      }
+    }
+
+    async function loadRecentOrders() {
+      try {
+        const res = await fetch('https://veriqon-backend.onrender.com/api/orders?shop=nbtsd.myshopify.com');
+        const orders = await res.json();
+
+        const tbody = document.getElementById('orders-table-body');
+
+        if (!orders.length) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No orders yet</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = orders.slice(0, 6).map(order => `
+          <tr>
+            <td>#${order.order_number || order.shopify_order_id}</td>
+            <td>${order.customer_email || '—'}</td>
+            <td>₹${order.total_price || '0'}</td>
+            <td>${order.risk_score}</td>
+            <td><span class="badge ${order.risk_level}">${order.risk_level}</span></td>
+            <td><button class="btn-view">View</button></td>
+          </tr>
+        `).join('');
+
+      } catch (err) {
+        console.error('Orders load error:', err);
+      }
+    }
+
+    loadDashboard();
+    loadRecentOrders();
+  </script>
+
+</body>
+</html>

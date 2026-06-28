@@ -1,0 +1,243 @@
+/* ── BILLING ── */
+
+.page-sub {
+  font-size: 13px;
+  color: #888;
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
+
+.section-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+.section-desc { font-size: 13px; color: #888; }
+
+/* CURRENT PLAN */
+.current-plan-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.current-plan-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.plan-star {
+  font-size: 28px;
+  width: 48px; height: 48px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.current-plan-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.current-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border: 1px solid #ddd;
+  border-radius: 99px;
+  color: #555;
+}
+
+.current-plan-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.current-plan-meta {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.6;
+}
+
+.current-plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cf-item {
+  font-size: 13px;
+  color: #444;
+}
+
+/* PLANS GRID */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.plan-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card.active {
+  border-color: #111;
+  border-width: 2px;
+}
+
+.plan-badge {
+  position: absolute;
+  top: -1px; right: 16px;
+  background: #111;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 0 0 8px 8px;
+}
+
+.plan-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.plan-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.plan-per {
+  font-size: 14px;
+  font-weight: 400;
+  color: #888;
+}
+
+.plan-tagline {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.plan-divider {
+  height: 1px;
+  background: #e5e5e5;
+  margin-bottom: 14px;
+}
+
+.plan-features {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pf-item {
+  font-size: 13px;
+}
+
+.pf-item.yes { color: #333; }
+.pf-item.no { color: #bbb; }
+
+.plan-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.plan-btn.current {
+  border: 1.5px solid #ddd;
+  background: #fff;
+  color: #888;
+  cursor: default;
+}
+
+.plan-btn.upgrade-active {
+  border: none;
+  background: #111;
+  color: #fff;
+}
+
+.plan-btn.upgrade-active:hover { background: #333; }
+
+.plan-btn.upgrade {
+  border: 1.5px solid #ddd;
+  background: #fff;
+  color: #111;
+}
+
+.plan-btn.upgrade:hover { background: #f5f5f5; }
+
+/* PAYMENT HISTORY */
+.paid-badge {
+  padding: 4px 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dl-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #888;
+}
+
+.dl-btn:hover { color: #111; }
+
+.help-text {
+  font-size: 13px;
+  color: #888;
+  margin-top: 16px;
+}
+
+.help-link {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.help-link:hover { text-decoration: underline; }
+
+/* TOPBAR RIGHT */
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.notif-icon { font-size: 18px; cursor: pointer; }
