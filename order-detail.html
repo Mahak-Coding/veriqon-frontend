@@ -19,10 +19,9 @@
     <nav>
       <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
       <a href="orders.html" class="nav-item active"><span class="nav-icon">☰</span> Orders</a>
-      <a href="#" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
-      <a href="#" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
-      <a href="#" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
-      <a href="#" class="nav-item"><span class="nav-icon">⊗</span> Rules</a>
+      <a href="risk-alerts.html" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="blocked-orders.html" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="customers.html" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
       <a href="settings.html" class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
       <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
     </nav>
@@ -34,94 +33,165 @@
   <div class="main">
     <header class="topbar">
       <div class="store-selector"><span>ABC Store</span><span class="chevron">▾</span></div>
-      <button class="btn-outline" onclick="location.href='index.html'">← Back to Orders</button>
+      <button class="btn-outline" onclick="location.href='orders.html'">← Back to Orders</button>
     </header>
 
     <div class="content">
 
       <div class="detail-title-row">
-        <h1 class="page-title">Order #1001 &nbsp;<span class="status flagged">Flagged</span></h1>
-        <p class="order-meta">May 24, 2025 at 10:24 AM &nbsp;|&nbsp; Online Store</p>
+        <h1 class="page-title" id="order-title">Loading... &nbsp;<span id="order-status-badge"></span></h1>
+        <p class="order-meta" id="order-meta">—</p>
       </div>
 
       <!-- ORDER INFO -->
       <div class="section-box">
         <h2 class="section-title">Order Information</h2>
         <div class="info-grid">
-          <div class="info-item"><span class="info-label">Order ID</span><span class="info-value">#1001</span></div>
-          <div class="info-item"><span class="info-label">Customer</span><span class="info-value">John Doe</span></div>
-          <div class="info-item"><span class="info-label">Date</span><span class="info-value">May 24, 2025 at 10:24 AM</span></div>
-          <div class="info-item"><span class="info-label">Email</span><span class="info-value">john.doe@email.com</span></div>
-          <div class="info-item"><span class="info-label">Amount</span><span class="info-value">$120.00</span></div>
-          <div class="info-item"><span class="info-label">Phone</span><span class="info-value">+1 (555) 123-4567</span></div>
-          <div class="info-item"><span class="info-label">Payment Method</span><span class="info-value">Visa •••• 4242</span></div>
-          <div class="info-item"><span class="info-label">Shipping Address</span><span class="info-value">123 Main St, Los Angeles, CA 90001</span></div>
-          <div class="info-item"><span class="info-label">Fulfillment</span><span class="info-value">Unfulfilled</span></div>
-          <div class="info-item"><span class="info-label">IP Address</span><span class="info-value">192.168.1.1</span></div>
+          <div class="info-item"><span class="info-label">Order ID</span><span class="info-value" id="d-order-id">—</span></div>
+          <div class="info-item"><span class="info-label">Customer Email</span><span class="info-value" id="d-email">—</span></div>
+          <div class="info-item"><span class="info-label">Date</span><span class="info-value" id="d-date">—</span></div>
+          <div class="info-item"><span class="info-label">Amount</span><span class="info-value" id="d-amount">—</span></div>
+          <div class="info-item"><span class="info-label">Payment Status</span><span class="info-value" id="d-payment">—</span></div>
+          <div class="info-item"><span class="info-label">Fulfillment</span><span class="info-value" id="d-fulfillment">—</span></div>
+          <div class="info-item"><span class="info-label">Billing City</span><span class="info-value" id="d-billing">—</span></div>
+          <div class="info-item"><span class="info-label">Shipping City</span><span class="info-value" id="d-shipping">—</span></div>
+          <div class="info-item"><span class="info-label">IP Address</span><span class="info-value" id="d-ip">—</span></div>
+          <div class="info-item"><span class="info-label">New Customer</span><span class="info-value" id="d-new-customer">—</span></div>
         </div>
       </div>
 
-      <!-- RISK SCORE + WHY FLAGGED -->
+      <!-- RISK SCORE -->
       <div class="section-box risk-row">
         <div class="risk-left">
           <p class="section-title">Risk Score</p>
-          <div class="score-number">85</div>
-          <div class="score-label-text high">High Risk</div>
-          <div class="score-bar"><div class="score-fill" style="width:85%"></div></div>
+          <div class="score-number" id="d-risk-score">—</div>
+          <div class="score-label-text" id="d-risk-level">—</div>
+          <div class="score-bar"><div class="score-fill" id="d-score-fill" style="width:0%"></div></div>
           <div class="score-range"><span>0</span><span>50</span><span>100</span></div>
         </div>
         <div class="risk-right">
           <p class="section-title">Why Flagged</p>
-          <ul class="flag-list">
-            <li class="flag-item warn"><span class="flag-icon">⚠</span> High risk email domain</li>
-            <li class="flag-item warn"><span class="flag-icon">⚠</span> Order amount is high for this customer</li>
-            <li class="flag-item warn"><span class="flag-icon">⚠</span> Shipping address does not match billing address</li>
-            <li class="flag-item info"><span class="flag-icon">ℹ</span> New customer</li>
-            <li class="flag-item warn"><span class="flag-icon">⚠</span> Multiple orders in short time from same IP</li>
+          <ul class="flag-list" id="d-flags">
+            <li>Loading...</li>
           </ul>
         </div>
       </div>
 
-      <!-- CUSTOMER HISTORY -->
-      <div class="section-box">
-        <div class="table-header">
-          <span class="section-title">Customer History</span>
-          <button class="btn-outline">View Full History</button>
-        </div>
-        <div class="history-cards">
-          <div class="h-card"><div class="h-label">Total Orders</div><div class="h-value">2</div></div>
-          <div class="h-card"><div class="h-label">Total Spent</div><div class="h-value">$180.00</div></div>
-          <div class="h-card"><div class="h-label">Avg Order Value</div><div class="h-value">$90.00</div></div>
-          <div class="h-card"><div class="h-label">First Order</div><div class="h-value">May 24, 2025</div></div>
-        </div>
-        <table style="margin-top:16px">
-          <thead>
-            <tr>
-              <th>Order ID</th><th>Date</th><th>Amount</th><th>Risk Score</th><th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1001</td><td>May 24, 2025</td><td>$120.00</td>
-              <td><span class="badge high">85 (High)</span></td>
-              <td><span class="status flagged">Flagged</span></td>
-            </tr>
-            <tr>
-              <td>#0978</td><td>May 20, 2025</td><td>$60.00</td>
-              <td><span class="badge medium">40 (Medium)</span></td>
-              <td><span class="status safe">Approved</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
       <!-- ACTION BUTTONS -->
       <div class="action-buttons">
-        <button class="btn-approve">✔ Approve</button>
-        <button class="btn-hold">⏸ Hold</button>
+        <button class="btn-approve" id="btn-approve" onclick="approveOrder()">✔ Approve</button>
+        <button class="btn-hold" id="btn-block" onclick="blockOrder()">⊘ Block Order</button>
       </div>
 
     </div>
   </div>
+
+  <script>
+    const API = 'https://veriqon-backend.onrender.com';
+    const SHOP = 'nbtsd.myshopify.com';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id');
+
+    const flagLabels = {
+      'billing_shipping_mismatch': '⚠ Billing & shipping address mismatch',
+      'high_value_order': '⚠ High value order',
+      'new_customer': 'ℹ New customer account',
+      'failed_payments': '⚠ Multiple failed payments',
+      'multiple_orders_same_ip': '⚠ Multiple orders from same IP'
+    };
+
+    async function loadOrder() {
+      if (!orderId) {
+        document.getElementById('order-title').textContent = 'Order not found';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/api/orders/${orderId}?shop=${SHOP}`);
+        const order = await res.json();
+
+        // Title
+        document.getElementById('order-title').innerHTML =
+          `Order #${order.order_number} &nbsp;<span class="status ${order.risk_level === 'high' ? 'flagged' : order.risk_level === 'medium' ? 'review' : 'safe'}">${order.risk_level === 'high' ? 'Flagged' : order.risk_level === 'medium' ? 'Review' : 'Safe'}</span>`;
+
+        document.getElementById('order-meta').textContent =
+          new Date(order.created_at).toLocaleString('en-IN');
+
+        // Info
+        document.getElementById('d-order-id').textContent = `#${order.order_number}`;
+        document.getElementById('d-email').textContent = order.customer_email || '—';
+        document.getElementById('d-date').textContent = new Date(order.created_at).toLocaleDateString('en-IN');
+        document.getElementById('d-amount').textContent = `₹${Number(order.total_price).toLocaleString('en-IN')}`;
+        document.getElementById('d-payment').textContent = order.financial_status || '—';
+        document.getElementById('d-fulfillment').textContent = order.fulfillment_status || 'Unfulfilled';
+        document.getElementById('d-billing').textContent = `${order.billing_city || '—'}, ${order.billing_country || ''}`;
+        document.getElementById('d-shipping').textContent = `${order.shipping_city || '—'}, ${order.shipping_country || ''}`;
+        document.getElementById('d-ip').textContent = order.browser_ip || '—';
+        document.getElementById('d-new-customer').textContent = order.is_new_customer ? 'Yes' : 'No';
+
+        // Risk
+        document.getElementById('d-risk-score').textContent = order.risk_score;
+        document.getElementById('d-risk-level').textContent =
+          order.risk_level === 'high' ? '🔴 High Risk' :
+          order.risk_level === 'medium' ? '🟡 Medium Risk' : '🟢 Low Risk';
+        document.getElementById('d-risk-level').className =
+          `score-label-text ${order.risk_level}`;
+        document.getElementById('d-score-fill').style.width = `${order.risk_score}%`;
+
+        // Flags
+        const flagList = document.getElementById('d-flags');
+        if (order.flags && order.flags.length > 0) {
+          flagList.innerHTML = order.flags.map(f =>
+            `<li class="flag-item warn">${flagLabels[f] || f}</li>`
+          ).join('');
+        } else {
+          flagList.innerHTML = '<li class="flag-item">No flags detected</li>';
+        }
+
+        // Block button
+        if (order.is_blocked) {
+          document.getElementById('btn-block').textContent = '✅ Unblock Order';
+          document.getElementById('btn-block').onclick = unblockOrder;
+        }
+
+      } catch (err) {
+        console.error('Error loading order:', err);
+      }
+    }
+
+    async function blockOrder() {
+      try {
+        await fetch(`${API}/api/orders/${orderId}/block`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        alert('Order blocked!');
+        loadOrder();
+      } catch (err) {
+        alert('Error blocking order');
+      }
+    }
+
+    async function unblockOrder() {
+      try {
+        await fetch(`${API}/api/orders/${orderId}/unblock`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        alert('Order unblocked!');
+        loadOrder();
+      } catch (err) {
+        alert('Error unblocking order');
+      }
+    }
+
+    async function approveOrder() {
+      alert('Order approved!');
+    }
+
+    loadOrder();
+  </script>
+
 </body>
 </html>
