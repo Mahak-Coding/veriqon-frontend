@@ -94,12 +94,17 @@
     const orderId = urlParams.get('id');
 
     const flagLabels = {
-      'billing_shipping_mismatch': '⚠ Billing & shipping address mismatch',
-      'high_value_order': '⚠ High value order',
-      'new_customer': 'ℹ New customer account',
-      'failed_payments': '⚠ Multiple failed payments',
-      'multiple_orders_same_ip': '⚠ Multiple orders from same IP'
-    };
+  'billing_shipping_mismatch': '⚠ Billing & shipping address mismatch',
+  'high_value_order': '⚠ High value order',
+  'new_customer': 'ℹ New customer account',
+  'new_customer_high_value': '⚠ New customer placing high value order',
+  'no_phone_number': '⚠ No phone number provided',
+  'disposable_email': '⚠ Disposable/temporary email used',
+  'bulk_quantity_order': '⚠ Unusually large quantity ordered',
+  'missing_billing_address': '⚠ Billing address missing',
+  'high_risk_country': '⚠ Shipping to high-risk country',
+  'high_value_cod': '⚠ High value Cash on Delivery order'
+};
 
     async function loadOrder() {
       if (!orderId) {

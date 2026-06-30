@@ -141,12 +141,17 @@
     function formatFlags(flags) {
       if (!flags || !flags.length) return '—';
       const labels = {
-        'billing_shipping_mismatch': 'Address mismatch',
-        'high_value_order': 'High value order',
-        'new_customer': 'New account',
-        'failed_payments': 'Failed payments',
-        'multiple_orders_same_ip': 'Multiple orders same IP'
-      };
+  'billing_shipping_mismatch': 'Address mismatch',
+  'high_value_order': 'High value order',
+  'new_customer': 'New account',
+  'new_customer_high_value': 'New + high value',
+  'no_phone_number': 'No phone',
+  'disposable_email': 'Disposable email',
+  'bulk_quantity_order': 'Bulk order',
+  'missing_billing_address': 'No billing address',
+  'high_risk_country': 'High-risk country',
+  'high_value_cod': 'High-value COD'
+};
       return flags.map(f => labels[f] || f).join(', ');
     }
 
