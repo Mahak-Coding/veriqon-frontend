@@ -18,11 +18,10 @@
     </div>
     <nav>
       <a href="index.html" class="nav-item"><span class="nav-icon">⊞</span> Dashboard</a>
-      <a href="#" class="nav-item"><span class="nav-icon">☰</span> Orders</a>
-      <a href="#" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
-      <a href="#" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
-      <a href="#" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
-      <a href="#" class="nav-item"><span class="nav-icon">⊗</span> Rules</a>
+      <a href="orders.html" class="nav-item"><span class="nav-icon">☰</span> Orders</a>
+      <a href="risk-alerts.html" class="nav-item"><span class="nav-icon">△</span> Risk Alerts</a>
+      <a href="blocked-orders.html" class="nav-item"><span class="nav-icon">⊘</span> Blocked Orders</a>
+      <a href="customers.html" class="nav-item"><span class="nav-icon">◯</span> Customers</a>
       <a href="settings.html" class="nav-item active"><span class="nav-icon">⚙</span> Settings</a>
       <a href="billing.html" class="nav-item"><span class="nav-icon">▣</span> Billing</a>
     </nav>
@@ -44,167 +43,152 @@
       <h1 class="page-title">Settings</h1>
       <p class="page-sub">Configure how Veriqon protects your store.</p>
 
-      <!-- CUSTOM RULES -->
+      <!-- RISK THRESHOLDS -->
       <div class="section-box">
         <div class="section-head">
           <div class="section-head-left">
             <div class="s-icon">⚙</div>
             <div>
-              <div class="section-title">Custom Rules</div>
-              <div class="section-desc">Set your own fraud detection rules.</div>
+              <div class="section-title">Risk Score Thresholds</div>
+              <div class="section-desc">Control when orders are flagged as medium or high risk.</div>
             </div>
-          </div>
-          <div class="toggle-wrap">
-            <label class="toggle">
-              <input type="checkbox" checked />
-              <span class="slider"></span>
-            </label>
-            <span class="toggle-label">Enabled</span>
           </div>
         </div>
 
         <div class="rules-list">
           <div class="rule-row">
             <div class="rule-left">
-              <div class="r-icon">💳</div>
-              <span class="rule-text">Block orders above amount</span>
+              <span class="rule-text">Medium risk threshold (score ≥)</span>
             </div>
             <div class="rule-right">
-              <select class="r-select"><option>USD</option></select>
-              <input class="r-input" type="number" value="500" />
-              <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
-              <button class="r-del">🗑</button>
+              <input class="r-input" type="number" id="medium-threshold" min="0" max="100" value="40" />
             </div>
           </div>
           <div class="rule-row">
             <div class="rule-left">
-              <div class="r-icon">🌐</div>
-              <span class="rule-text">Block orders from high-risk countries</span>
+              <span class="rule-text">High risk threshold (score ≥)</span>
             </div>
             <div class="rule-right">
-              <button class="r-tag">3 countries ›</button>
-              <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
-              <button class="r-del">🗑</button>
-            </div>
-          </div>
-          <div class="rule-row">
-            <div class="rule-left">
-              <div class="r-icon">✉</div>
-              <span class="rule-text">Block orders with email domain</span>
-            </div>
-            <div class="rule-right">
-              <button class="r-tag">10 domains ›</button>
-              <label class="toggle"><input type="checkbox" /><span class="slider"></span></label>
-              <button class="r-del">🗑</button>
+              <input class="r-input" type="number" id="high-threshold" min="0" max="100" value="70" />
             </div>
           </div>
         </div>
-
-        <button class="add-rule-btn">+ Add New Rule</button>
       </div>
 
-      <!-- EMAIL ALERTS -->
+      <!-- AUTO BLOCK -->
+      <div class="section-box">
+        <div class="section-head">
+          <div class="section-head-left">
+            <div class="s-icon">⊘</div>
+            <div>
+              <div class="section-title">Auto-Block High Risk Orders</div>
+              <div class="section-desc">Automatically block orders that cross the high risk threshold.</div>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="auto-block-toggle" />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label" id="auto-block-label">Disabled</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERT EMAIL -->
       <div class="section-box">
         <div class="section-head">
           <div class="section-head-left">
             <div class="s-icon">✉</div>
             <div>
-              <div class="section-title">Email Alerts</div>
-              <div class="section-desc">Get notified about high-risk and blocked orders.</div>
+              <div class="section-title">Alert Email</div>
+              <div class="section-desc">Where should we send high-risk order notifications?</div>
             </div>
-          </div>
-          <div class="toggle-wrap">
-            <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
-            <span class="toggle-label">Enabled</span>
           </div>
         </div>
-
         <div class="alert-list">
-          <div class="alert-row">
-            <div>
-              <div class="alert-title">High-risk order alert</div>
-              <div class="alert-desc">Get notified when an order has a high risk score (70+).</div>
-            </div>
-            <input type="checkbox" class="checkbox" checked />
-          </div>
-          <div class="alert-row">
-            <div>
-              <div class="alert-title">Order blocked alert</div>
-              <div class="alert-desc">Get notified when an order is automatically blocked.</div>
-            </div>
-            <input type="checkbox" class="checkbox" checked />
-          </div>
-          <div class="alert-row">
-            <div>
-              <div class="alert-title">Daily summary report</div>
-              <div class="alert-desc">Receive a daily summary of suspicious orders.</div>
-            </div>
-            <input type="checkbox" class="checkbox" />
-          </div>
           <div class="alert-row email-row">
             <span class="alert-title">Send alerts to</span>
             <div class="email-input-wrap">
-              <input type="email" class="email-input" value="owner@abcstore.com" />
-              <button class="edit-btn">✏</button>
+              <input type="email" class="email-input" id="alert-email" placeholder="owner@yourstore.com" />
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RETURN POLICY LIMITS -->
-      <div class="section-box">
-        <div class="section-head">
-          <div class="section-head-left">
-            <div class="s-icon">↩</div>
-            <div>
-              <div class="section-title">Return Policy Limits</div>
-              <div class="section-desc">Set limits to reduce return abuse.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="return-list">
-          <div class="return-row">
-            <div>
-              <div class="alert-title">Maximum return window</div>
-              <div class="alert-desc">Set how many days after delivery return is allowed.</div>
-            </div>
-            <select class="r-select wide">
-              <option>30 days</option>
-              <option>15 days</option>
-              <option>7 days</option>
-            </select>
-          </div>
-          <div class="return-row">
-            <div>
-              <div class="alert-title">Maximum returns per order</div>
-              <div class="alert-desc">Limit how many items can be returned.</div>
-            </div>
-            <select class="r-select wide">
-              <option>3 items</option>
-              <option>2 items</option>
-              <option>1 item</option>
-            </select>
-          </div>
-          <div class="return-row">
-            <div>
-              <div class="alert-title">Maximum returns per customer</div>
-              <div class="alert-desc">Limit total returns allowed in a time period.</div>
-            </div>
-            <select class="r-select wide">
-              <option>5 returns / 90 days</option>
-              <option>3 returns / 90 days</option>
-              <option>1 return / 90 days</option>
-            </select>
           </div>
         </div>
       </div>
 
       <div class="save-bar">
-        <button class="btn-save">Save Changes</button>
+        <button class="btn-save" id="save-btn" onclick="saveSettings()">Save Changes</button>
+        <span id="save-status" style="margin-left:12px;font-size:13px;"></span>
       </div>
 
     </div>
   </div>
+
+  <script>
+    const API = 'https://veriqon-backend.onrender.com';
+    const SHOP = 'nbtsd.myshopify.com';
+
+    async function loadSettings() {
+      try {
+        const res = await fetch(`${API}/api/settings?shop=${SHOP}`);
+        const settings = await res.json();
+
+        document.getElementById('medium-threshold').value = settings.medium_risk_threshold ?? 40;
+        document.getElementById('high-threshold').value = settings.high_risk_threshold ?? 70;
+        document.getElementById('auto-block-toggle').checked = settings.auto_block ?? false;
+        document.getElementById('auto-block-label').textContent = settings.auto_block ? 'Enabled' : 'Disabled';
+        document.getElementById('alert-email').value = settings.alert_email || '';
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+
+    document.getElementById('auto-block-toggle').addEventListener('change', function() {
+      document.getElementById('auto-block-label').textContent = this.checked ? 'Enabled' : 'Disabled';
+    });
+
+    async function saveSettings() {
+      const statusEl = document.getElementById('save-status');
+      const mediumThreshold = parseInt(document.getElementById('medium-threshold').value);
+      const highThreshold = parseInt(document.getElementById('high-threshold').value);
+
+      if (mediumThreshold >= highThreshold) {
+        statusEl.textContent = '⚠ Medium threshold must be less than high threshold';
+        statusEl.style.color = '#dc2626';
+        return;
+      }
+
+      const payload = {
+        shop: SHOP,
+        medium_risk_threshold: mediumThreshold,
+        high_risk_threshold: highThreshold,
+        auto_block: document.getElementById('auto-block-toggle').checked,
+        alert_email: document.getElementById('alert-email').value
+      };
+
+      try {
+        statusEl.textContent = 'Saving...';
+        statusEl.style.color = '#666';
+
+        const res = await fetch(`${API}/api/settings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('Save failed');
+
+        statusEl.textContent = '✅ Settings saved!';
+        statusEl.style.color = '#16a34a';
+        setTimeout(() => statusEl.textContent = '', 3000);
+      } catch (err) {
+        statusEl.textContent = '❌ Error saving settings';
+        statusEl.style.color = '#dc2626';
+      }
+    }
+
+    loadSettings();
+  </script>
+
 </body>
 </html>
