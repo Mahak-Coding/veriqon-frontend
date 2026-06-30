@@ -116,6 +116,34 @@
         </div>
       </div>
 
+<!-- BLOCKLIST -->
+      <div class="section-box">
+        <div class="section-head">
+          <div class="section-head-left">
+            <div class="s-icon">🚫</div>
+            <div>
+              <div class="section-title">Custom Blocklist</div>
+              <div class="section-desc">Block specific emails, domains, countries, or IPs instantly.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-row" style="margin-bottom:16px;">
+          <select id="blocklist-type" class="r-select">
+            <option value="email">Email Address</option>
+            <option value="domain">Email Domain</option>
+            <option value="country">Country</option>
+            <option value="ip">IP Address</option>
+          </select>
+          <input class="r-input" type="text" id="blocklist-value" placeholder="e.g. fraud@email.com" style="flex:1;" />
+          <button class="card-btn" style="width:auto;padding:8px 20px;" onclick="addBlocklistItem()">+ Add</button>
+        </div>
+
+        <div id="blocklist-items">
+          <p style="color:#888;font-size:13px;">Loading...</p>
+        </div>
+      </div>
+      
       <div class="save-bar">
         <button class="btn-save" id="save-btn" onclick="saveSettings()">Save Changes</button>
         <span id="save-status" style="margin-left:12px;font-size:13px;"></span>
@@ -186,8 +214,74 @@
         statusEl.style.color = '#dc2626';
       }
     }
+const typeLabels = { email: 'Email', domain: 'Domain', country: 'Country', ip: 'IP Address' };
+
+    async function loadBlocklist() {
+      try {
+        const res = await fetch(`${API}/api/blocklist?shop=${SHOP}`);
+        const items = await res.json();
+        const container = document.getElementById('blocklist-items');
+
+        if (!items.length) {
+          container.innerHTML = '<p style="color:#888;font-size:13px;">No blocklist items yet. Add one above.</p>';
+          return;
+        }
+
+        container.innerHTML = items.map(item => `
+          <div class="rule-row">
+            <div class="rule-left">
+              <span class="rule-text">${typeLabels[item.type]}: <strong>${item.value}</strong></span>
+            </div>
+            <div class="rule-right">
+              <button class="r-del" onclick="removeBlocklistItem('${item.id}')">🗑</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Error loading blocklist:', err);
+      }
+    }
+
+    async function addBlocklistItem() {
+      const type = document.getElementById('blocklist-type').value;
+      const value = document.getElementById('blocklist-value').value.trim();
+
+      if (!value) {
+        alert('Please enter a value');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/api/blocklist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ shop: SHOP, type, value })
+        });
+
+        const result = await res.json();
+        if (!res.ok) {
+          alert(result.error || 'Error adding item');
+          return;
+        }
+
+        document.getElementById('blocklist-value').value = '';
+        loadBlocklist();
+      } catch (err) {
+        alert('Error adding to blocklist');
+      }
+    }
+
+    async function removeBlocklistItem(id) {
+      try {
+        await fetch(`${API}/api/blocklist/${id}`, { method: 'DELETE' });
+        loadBlocklist();
+      } catch (err) {
+        alert('Error removing item');
+      }
+    }
 
     loadSettings();
+    loadBlocklist();
   </script>
 
 </body>
